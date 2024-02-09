@@ -1,5 +1,4 @@
-// Uncomment the code below and write your tests
-// import { readFileAsynchronously, doStuffByTimeout, doStuffByInterval } from '.';
+import { readFileAsynchronously, doStuffByTimeout, doStuffByInterval } from '.';
 
 describe('doStuffByTimeout', () => {
   beforeAll(() => {
@@ -11,11 +10,19 @@ describe('doStuffByTimeout', () => {
   });
 
   test('should set timeout with provided callback and timeout', () => {
-    // Write your test here
+    jest.spyOn(global, 'setTimeout');
+    doStuffByTimeout(() => {
+      console.log('time passed');
+    }, 1000);
+    expect(setTimeout).toHaveBeenCalledTimes(1);
   });
 
   test('should call callback only after timeout', () => {
-    // Write your test here
+    jest.spyOn(global, 'setTimeout');
+    doStuffByTimeout(() => {
+      console.log('time passed');
+    }, 1000);
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 1000);
   });
 });
 
@@ -29,24 +36,41 @@ describe('doStuffByInterval', () => {
   });
 
   test('should set interval with provided callback and timeout', () => {
-    // Write your test here
+    jest.spyOn(global, 'setInterval');
+    doStuffByInterval(() => {
+      console.log('time passed');
+    }, 1000);
+    expect(setInterval).toHaveBeenCalledTimes(1);
   });
 
   test('should call callback multiple times after multiple intervals', () => {
-    // Write your test here
+    jest.spyOn(global, 'setInterval');
+    doStuffByInterval(() => {
+      console.log('time passed');
+    }, 1000);
+    expect(setInterval).toHaveBeenLastCalledWith(expect.any(Function), 1000);
   });
 });
 
+jest.mock('fs', () => ({
+  existsSync: jest.fn().mockResolvedValue(true),
+  readFile: jest.fn().mockImplementation(() => {
+    return 'my file content';
+  }),
+}));
+
 describe('readFileAsynchronously', () => {
   test('should call join with pathToFile', async () => {
-    // Write your test here
+    //
   });
 
   test('should return null if file does not exist', async () => {
-    // Write your test here
+    const result = await readFileAsynchronously('./fileThatDoesnotExist.txt');
+    expect(result).toBeNull();
   });
 
   test('should return file content if file exists', async () => {
-    // Write your test here
+    const result = await readFileAsynchronously('./wolf.txt');
+    expect(result).toBe('my file content');
   });
 });
